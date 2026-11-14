@@ -1,0 +1,15 @@
+name: fork-ci
+on:
+  pull_request_target:
+    types: [labeled]
+jobs:
+  test:
+    if: contains(github.event.pull_request.labels.*.name, 'safe-to-test')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - run: bash ci.sh
+        env:
+          DEMO_SECRET: ${{ secrets.DEMO_SECRET }}
